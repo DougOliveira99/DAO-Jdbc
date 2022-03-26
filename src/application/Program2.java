@@ -1,6 +1,7 @@
 package application;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 import model.dao.DaoFactory;
@@ -38,7 +39,13 @@ public class Program2 {
 						System.out.println("Error! Id not found!");
 					}
 				}
-				
+				else if(user == 2) {
+					List<Department> list = departmentDao.findAll();
+					
+					for(Department dep : list) {
+						System.out.println(dep);
+					}
+				}
 				
 				
 				
