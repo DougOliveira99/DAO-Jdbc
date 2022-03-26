@@ -168,7 +168,6 @@ public class SellerDaoJDBC implements SellerDao {
 				if (rs.next()) {
 					int id = rs.getInt(1);
 					obj.setId(id);
-					System.out.println("Seller inserted! new id = " + obj.getId());
 				}
 				DB.closeResultSet(rs);
 			}

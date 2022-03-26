@@ -82,7 +82,7 @@ public class Program {
 					
 					Seller seller = new Seller(null, name, email, birthdate, baseSalary, department);
 					sellerDao.insert(seller);
-					
+					System.out.println("Seller inserted! new id = " + seller.getId());
 				}
 				
 				else if (user == 5) {
