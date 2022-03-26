@@ -49,6 +49,7 @@ public class SellerDaoJDBC implements SellerDao {
 				if (rs.next()) {
 					int id = rs.getInt(1);
 					obj.setId(id);
+					System.out.println("Seller inserted! new id = " + obj.getId());
 				}
 				DB.closeResultSet(rs);
 			}
@@ -79,7 +80,9 @@ public class SellerDaoJDBC implements SellerDao {
 			st.setDate(3, new Date(obj.getBirthdate().getTime()));
 			st.setDouble(4, obj.getBaseSalary());
 			st.setInt(5, obj.getDepartment().getId());
-			st.setInt(6, obj.getId());			
+			st.setInt(6, obj.getId());
+			
+			st.executeUpdate();
 		} 
 		
 		catch (SQLException e) {

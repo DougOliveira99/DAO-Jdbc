@@ -1,7 +1,11 @@
 package application;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 import model.dao.DaoFactory;
@@ -13,49 +17,149 @@ public class Program {
 
 	public static void main(String[] args) {
 		
+		Locale.setDefault(Locale.US);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 		Scanner input = new Scanner(System.in);
 		
 		SellerDao sellerDao = DaoFactory.createSellerDao();
 		
-		System.out.println("=== TEST 1: findById ===");
-		Seller seller = sellerDao.findById(3);
-		System.out.println(seller);
-		
-		System.out.println("\n=== TEST 2: seller findByDepartment ===");
-		Department department = new Department(2, null);
-		List<Seller> list = sellerDao.findByDepartment(department);
-		
-		for (Seller obj : list) {
-			System.out.println(obj);
+		while (true) {
+			try {
+				
+				System.out.println();
+				System.out.println("1 - Find seller by id");
+				System.out.println("2 - Find seller by department");
+				System.out.println("3 - Find all sellers");
+				System.out.println("4 - Insert new seller");
+				System.out.println("5 - Update seller by id");
+				System.out.println("6 - Delete seller by id");
+				System.out.println("7 - Exit");
+				System.out.print("Enter your option: ");
+				
+				int user = input.nextInt();
+				
+				if(user == 1) {
+					System.out.print("Enter a seller id: ");
+					Seller seller = sellerDao.findById(input.nextInt());
+					if (seller != null) {
+						System.out.println(seller);
+					}
+					else {
+						System.out.println("Error! Id not found!");
+					}
+				}
+				
+				else if(user == 2) {
+					System.out.print("Enter a department id: ");
+					Department department = new Department(input.nextInt(), null);
+					List<Seller> list = sellerDao.findByDepartment(department);
+					for (Seller obj : list) {
+						System.out.println(obj);
+					}
+				}
+				
+				else if(user == 3) {
+					List<Seller>list = sellerDao.findAll();
+					
+					for (Seller obj : list) {
+						System.out.println(obj);
+					}
+					
+				}
+				
+				else if(user == 4) {
+					System.out.print("Name: ");
+					input.nextLine();
+					String name = input.nextLine();
+					System.out.print("Email: ");
+					String email = input.nextLine();
+					System.out.print("Birthdate (DD/MM/YYYY): ");
+					Date birthdate = sdf.parse(input.nextLine());
+					System.out.print("Base salary: $");
+					double baseSalary = input.nextDouble();
+					System.out.print("Department Id: ");
+					Department department = new Department(input.nextInt(), null);
+					
+					Seller seller = new Seller(null, name, email, birthdate, baseSalary, department);
+					sellerDao.insert(seller);
+					
+				}
+				
+				else if (user == 5) {
+					System.out.print("Enter a seller id: ");
+					Seller seller = sellerDao.findById(input.nextInt());
+					if (seller != null) {
+						System.out.println("1 - Id");
+						System.out.println("2 - Name");
+						System.out.println("3 - Email");
+						System.out.println("4 - Birthdate");
+						System.out.println("5 - Base salary");
+						System.out.println("6 - Department");
+						System.out.print("Select a field to update: ");
+						
+						user = input.nextInt();
+						
+						if(user == 1) {
+							System.out.println("New id:");
+							input.nextInt();
+							sellerDao.update(seller);
+						}
+						else if(user == 2) {
+							input.nextLine();
+							System.out.print("New name: ");
+							seller.setName(input.nextLine());
+						}
+						else if(user == 3) {
+							input.nextLine();
+							System.out.print("New email: ");
+							seller.setEmail(input.nextLine());
+						}
+						else if(user == 4) {
+							System.out.print("New birthdate (DD/MM/YYYY): ");
+							seller.setBirthdate(sdf.parse(input.nextLine()));
+						}
+						else if(user == 5) {
+							System.out.print("New base salary: $");
+							seller.setBaseSalary(input.nextDouble());
+						}
+						else if(user == 6) {
+							System.out.print("New department id: ");
+							seller.setDepartment(new Department(input.nextInt(), null));
+						}
+						else {
+							System.out.println("Error! Invalid option!");
+						}
+						sellerDao.update(seller);
+						System.out.println("Seller Updated!");
+					}
+					else {
+						System.out.println("Error! Id not found!");
+					}
+				}
+				
+				else if(user == 6) {
+					System.out.print("Enter a seller id: ");
+					sellerDao.deleteById(input.nextInt());
+					System.out.println("Delete Complete!");
+				}
+				else if(user == 7) {
+					break;
+				}
+				else {
+					System.out.println("Error! Invalid option!");
+				}
+			}
+			
+			catch (InputMismatchException e) {
+				System.out.println("Invalid input type. Try again.");
+				input.nextLine();
+			}
+			
+			catch (ParseException e) {
+				System.out.println(e.getMessage());
+			}
 		}
-		
-		System.out.println("\n=== TEST 3: seller findAll ===");
-		list = sellerDao.findAll();
-		
-		for (Seller obj : list) {
-			System.out.println(obj);
-		}
-		
-		System.out.println("\n=== TEST 4: seller insert ===");
-		Seller newSeller = new Seller(null, "Douglas Oliveira", "douglas@gmail.com", new Date(), 4000.0, department);
-		sellerDao.insert(newSeller);
-		System.out.println("Inserted! New id = " + newSeller.getId());
-
-		System.out.println("\n=== TEST 5: seller update ===");
-		seller = sellerDao.findById(1);
-		seller.setName("Martha Waine");
-		sellerDao.update(seller);
-		System.out.println("Update Complete");
-	
-		System.out.println("\n=== TEST 6: seller delete ===");
-		System.out.print("Enter id for delete test: ");
-		int id = input.nextInt();
-		sellerDao.deleteById(id);
-		System.out.println("Delete complete!");
-
+			
 		input.close();
 	}
-	
-
-
 }
