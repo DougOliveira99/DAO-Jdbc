@@ -31,8 +31,9 @@ public class SellerDaoJDBC implements SellerDao {
 		try {
 			st = conn.prepareStatement(
 					"INSERT INTO seller "
-					 + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
-					 + "VALUES (?, ?, ?, ?, ?)",
+					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+					+ "VALUES "
+					+ "(?, ?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 			
 			st.setString(1, obj.getName());
@@ -45,23 +46,19 @@ public class SellerDaoJDBC implements SellerDao {
 			
 			if (rowsAffected > 0) {
 				ResultSet rs = st.getGeneratedKeys();
-				if(rs.next()) {
+				if (rs.next()) {
 					int id = rs.getInt(1);
 					obj.setId(id);
 				}
-			DB.closeResultSet(rs);
-			
+				DB.closeResultSet(rs);
 			}
-			
 			else {
 				throw new DbException("Unexpected error! No rows affected!");
 			}
-		} 
-		
+		}
 		catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		}
-		
 		finally {
 			DB.closeStatement(st);
 		}
@@ -97,7 +94,23 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("DELETE FROM seller WHERE Id = ? ");
+			
+			st.setInt(1, id);
+			
+			st.executeUpdate();
+		}
+		
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+	
+		finally {
+			DB.closeStatement(st);
+		}
+		
 		
 	}
 
