@@ -89,40 +89,34 @@ public class Program {
 					System.out.print("Enter a seller id: ");
 					Seller seller = sellerDao.findById(input.nextInt());
 					if (seller != null) {
-						System.out.println("1 - Id");
-						System.out.println("2 - Name");
-						System.out.println("3 - Email");
-						System.out.println("4 - Birthdate");
-						System.out.println("5 - Base salary");
-						System.out.println("6 - Department");
+						System.out.println("1 - Name");
+						System.out.println("2 - Email");
+						System.out.println("3 - Birthdate");
+						System.out.println("4 - Base salary");
+						System.out.println("5 - Department");
 						System.out.print("Select a field to update: ");
 						
 						user = input.nextInt();
 						
 						if(user == 1) {
-							System.out.println("New id:");
-							input.nextInt();
-							sellerDao.update(seller);
-						}
-						else if(user == 2) {
 							input.nextLine();
 							System.out.print("New name: ");
 							seller.setName(input.nextLine());
 						}
-						else if(user == 3) {
+						else if(user == 2) {
 							input.nextLine();
 							System.out.print("New email: ");
 							seller.setEmail(input.nextLine());
 						}
-						else if(user == 4) {
+						else if(user == 3) {
 							System.out.print("New birthdate (DD/MM/YYYY): ");
 							seller.setBirthdate(sdf.parse(input.nextLine()));
 						}
-						else if(user == 5) {
+						else if(user == 4) {
 							System.out.print("New base salary: $");
 							seller.setBaseSalary(input.nextDouble());
 						}
-						else if(user == 6) {
+						else if(user == 5) {
 							System.out.print("New department id: ");
 							seller.setDepartment(new Department(input.nextInt(), null));
 						}

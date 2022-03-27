@@ -46,14 +46,27 @@ public class Program2 {
 						System.out.println(dep);
 					}
 				}
-				else if(user ==3) {
+				else if(user == 3) {
 					System.out.print("Enter the department name: ");
 					input.nextLine();
 					Department newDep = new Department(null, input.nextLine());
 					departmentDao.insert(newDep);
 					System.out.println("Inserted! new id: " + newDep.getId());
 				}
-				
+				else if(user == 4) {
+					System.out.print("Enter the department id: ");
+					Department department = departmentDao.findById(input.nextInt());
+					if(department != null) {
+						System.out.print("New department name: ");
+						input.nextLine();
+						department.setName(input.nextLine());
+						departmentDao.update(department);
+						System.out.println("Department updated!");
+					}
+					else {
+						System.out.println("Error! Id not found!");
+					}
+				}
 				
 				
 				
