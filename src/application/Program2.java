@@ -67,13 +67,17 @@ public class Program2 {
 						System.out.println("Error! Id not found!");
 					}
 				}
-				
-				
-				
-				
+				else if(user == 5) {
+					System.out.print("Enter the department id: ");
+					departmentDao.deleteById(input.nextInt());
+					System.out.println("Delete complete!");
+				}
 				
 				else if(user == 6) {
 					break;
+				}
+				else {
+					System.out.println("Error! Invalid option!");
 				}
 			}
 			catch (InputMismatchException e) {
